@@ -1,32 +1,37 @@
 import { galleryItems } from "./gallery-items.js";
 // Change code below this line
-const galleryEl = document.querySelector("div.gallery");
 
-const makeGallery = galleryItems
+const galleryEl = document.querySelector(".gallery");
+
+const markup = galleryItems
   .map(
     ({ preview, original, description }) =>
-      `<a class="gallery__link" >
+      `<div class="gallery__item">
+  <a class="gallery__link" href="large-image.jpg">
     <img
       class="gallery__image"
       src="${preview}"
       data-source="${original}"
-      alt= "${description}"
-    >
-  </a>`
+      alt="${description}"
+    />
+  </a>
+</div>`
   )
   .join("");
 
-galleryEl.insertAdjacentHTML("afterbegin", makeGallery);
+galleryEl.innerHTML = markup;
 
-galleryEl.addEventListener("click", (e) => {
+galleryEl.addEventListener("click", onShowImg);
+
+function onShowImg(e) {
   e.preventDefault();
-  const itemEl = e.target.dataset.source;
-  console.log(e.target.dataset);
+  if (e.target.nodeName !== "IMG") {
+    return;
+  }
 
   const instance = basicLightbox.create(`
-    <img src="${itemEl}" width="800" height="600">
+    <img src="${e.target.dataset.source}" width="800" height="600">
 `);
-  instance.show();
-});
 
-console.log(galleryItems);
+  instance.show();
+}
